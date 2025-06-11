@@ -81,7 +81,7 @@ mvn spring-boot:run
 ```
 
 ## Testing
-JUnit tests are included in `RewardServiceTest.java`.
+JUnit tests are included in `RewardServiceImplTest and RewardControllerTest`.
 Run with:
 ```
 mvn test
