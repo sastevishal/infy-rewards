@@ -32,7 +32,7 @@ public class RewardServiceImplTest {
         MockitoAnnotations.openMocks(this);
 
         testCustomer = new Customer();
-        testCustomer.setCustomerId(customerId);  // updated to match your actual field
+        testCustomer.setCustomerId(customerId);
         testCustomer.setCustomerName("Vishal Saste");
     }
 
@@ -46,7 +46,7 @@ public class RewardServiceImplTest {
 
         List<Transaction> mockTransactions = Arrays.asList(t1, t2);
 
-        when(transactionRepository.findByCustomerIdAndTransactionDateBetween(customerId, start, end))
+        when(transactionRepository.findByCustomer_CustomerIdAndTransactionDateBetween(customerId, start, end))
                 .thenReturn(mockTransactions);
 
         RewardDTO result = rewardService.getCustomerRewards(customerId, start, end);

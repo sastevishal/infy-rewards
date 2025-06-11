@@ -10,8 +10,9 @@ import java.time.LocalDate;
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "transaction_id")
     private Long transactionId;
-
+    @Column(name = "transaction_amount", nullable = false)
     private Double transactionAmount;
 
     @Column(name = "transaction_date")
@@ -30,6 +31,7 @@ public class Transaction {
         this.transactionDate = transactionDate;
         this.customer = customer;
     }
+
     public Long getTransactionId() {
         return transactionId;
     }

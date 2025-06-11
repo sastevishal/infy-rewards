@@ -4,8 +4,8 @@ import com.retail.rewards.dto.RewardDTO;
 import com.retail.rewards.dto.TransactionResponse;
 import com.retail.rewards.entity.Transaction;
 import com.retail.rewards.repository.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class RewardServiceImpl implements RewardService {
-
-    @Autowired
     private TransactionRepository transactionRepository;
+
+    public RewardServiceImpl(TransactionRepository transactionRepository) { this.transactionRepository = transactionRepository; }
 
     private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
 
@@ -31,7 +31,7 @@ public class RewardServiceImpl implements RewardService {
      */
     @Override
     public RewardDTO getCustomerRewards(String customerId, LocalDate start, LocalDate end) {
-        List<Transaction> transactions = transactionRepository.findByCustomerIdAndTransactionDateBetween(customerId, start, end);
+        List<Transaction> transactions = transactionRepository.findByCustomer_CustomerIdAndTransactionDateBetween(customerId, start, end);
 
         List<TransactionResponse> txResponses = transactions.stream()
                 .map(tx -> new TransactionResponse(
@@ -71,7 +71,7 @@ public class RewardServiceImpl implements RewardService {
      */
     public int calculateRewards(double amount) {
         return amount > 100 ? (int) ((amount - 100) * 2 + 50) :
-                amount > 50  ? (int) (amount - 50) :
+                amount > 50 ? (int) (amount - 50) :
                         0;
     }
 }

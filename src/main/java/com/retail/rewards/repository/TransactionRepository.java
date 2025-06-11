@@ -24,5 +24,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
      * @param endDate    The end date of the transaction period.
      * @return A list of transactions matching the criteria.
      */
-    List<Transaction> findByCustomerIdAndTransactionDateBetween(String customerId, LocalDate startDate, LocalDate endDate);
+    List<Transaction> findByCustomer_CustomerIdAndTransactionDateBetween(String customerId, LocalDate startDate, LocalDate endDate);
 }
