@@ -12,6 +12,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transaction_id")
     private Long transactionId;
+
     @Column(name = "transaction_amount", nullable = false)
     private Double transactionAmount;
 
