@@ -14,6 +14,7 @@ public class Customer {
 
     @Column(nullable = false, length = 100)
     private String customerName;
+
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Transaction> transactions;
 
