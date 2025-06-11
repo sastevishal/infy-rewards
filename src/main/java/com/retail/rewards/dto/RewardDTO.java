@@ -12,7 +12,6 @@ public class RewardDTO {
     private Map<String, Integer> monthlyRewards;
     private List<TransactionResponse> transactions;
 
-    // Getters and setters
     public String getCustomerId() {
         return customerId;
     }

@@ -10,9 +10,9 @@ import java.time.LocalDate;
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long transactionId;
 
-    private Double amount;
+    private Double transactionAmount;
 
     @Column(name = "transaction_date")
     private LocalDate transactionDate;
@@ -24,29 +24,26 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(Long id, Double amount, LocalDate transactionDate, Customer customer) {
-        this.id = id;
-        this.amount = amount;
+    public Transaction(Long transactionId, Double transactionAmount, LocalDate transactionDate, Customer customer) {
+        this.transactionId = transactionId;
+        this.transactionAmount = transactionAmount;
         this.transactionDate = transactionDate;
         this.customer = customer;
     }
-
-    // Getters and setters...
-
-    public Long getId() {
-        return id;
+    public Long getTransactionId() {
+        return transactionId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setTransactionId(Long transactionId) {
+        this.transactionId = transactionId;
     }
 
-    public Double getAmount() {
-        return amount;
+    public Double getTransactionAmount() {
+        return transactionAmount;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setTransactionAmount(Double transactionAmount) {
+        this.transactionAmount = transactionAmount;
     }
 
     public LocalDate getTransactionDate() {

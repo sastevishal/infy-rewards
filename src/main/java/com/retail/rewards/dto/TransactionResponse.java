@@ -8,14 +8,11 @@ public class TransactionResponse {
     private LocalDate date;
     private int rewardPoints;
 
-    // Constructors
     public TransactionResponse(double amount, LocalDate date, int rewardPoints) {
         this.amount = amount;
         this.date = date;
         this.rewardPoints = rewardPoints;
     }
-
-    // Getters and setters
 
     public double getAmount() {
         return amount;

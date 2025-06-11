@@ -6,12 +6,11 @@ import com.retail.rewards.entity.Transaction;
 import com.retail.rewards.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class RewardServiceImpl implements RewardService {
@@ -19,23 +18,37 @@ public class RewardServiceImpl implements RewardService {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
+
+    /**
+     * Calculates the total, monthly, and transaction-level rewards
+     * for a given customer within a specified date range.
+     *
+     * @param customerId the ID of the customer
+     * @param start      the start date for the reward calculation
+     * @param end        the end date for the reward calculation
+     * @return RewardDTO object containing rewards data
+     */
     @Override
     public RewardDTO getCustomerRewards(String customerId, LocalDate start, LocalDate end) {
         List<Transaction> transactions = transactionRepository.findByCustomerIdAndTransactionDateBetween(customerId, start, end);
 
-        int totalRewards = 0;
-        Map<String, Integer> monthlyRewards = new HashMap<>();
-        List<TransactionResponse> txResponses = new ArrayList<>();
+        List<TransactionResponse> txResponses = transactions.stream()
+                .map(tx -> new TransactionResponse(
+                        tx.getTransactionAmount(),
+                        tx.getTransactionDate(),
+                        calculateRewards(tx.getTransactionAmount())))
+                .collect(Collectors.toList());
 
-        for (Transaction tx : transactions) {
-            int points = calculateRewards(tx.getAmount());
-            totalRewards += points;
+        int totalRewards = txResponses.stream()
+                .mapToInt(TransactionResponse::getRewardPoints)
+                .sum();
 
-            String monthKey = tx.getTransactionDate().getYear() + "-" + String.format("%02d", tx.getTransactionDate().getMonthValue());
-            monthlyRewards.put(monthKey, monthlyRewards.getOrDefault(monthKey, 0) + points);
-
-            txResponses.add(new TransactionResponse(tx.getAmount(), tx.getTransactionDate(), points));
-        }
+        Map<String, Integer> monthlyRewards = txResponses.stream()
+                .collect(Collectors.groupingBy(
+                        tx -> tx.getDate().format(MONTH_FORMATTER),
+                        Collectors.summingInt(TransactionResponse::getRewardPoints)
+                ));
 
         RewardDTO rewardDTO = new RewardDTO();
         rewardDTO.setCustomerId(customerId);
@@ -48,13 +61,17 @@ public class RewardServiceImpl implements RewardService {
         return rewardDTO;
     }
 
+    /**
+     * Calculates reward points:
+     * - 2 points for every dollar spent over $100,
+     * - 1 point for every dollar spent between $50 and $100.
+     *
+     * @param amount the transaction amount
+     * @return reward points
+     */
     public int calculateRewards(double amount) {
-        int rewards = 0;
-        if (amount > 100) {
-            rewards += (int) ((amount - 100) * 2) + 50;
-        } else if (amount > 50) {
-            rewards += (int) (amount - 50);
-        }
-        return rewards;
+        return amount > 100 ? (int) ((amount - 100) * 2 + 50) :
+                amount > 50  ? (int) (amount - 50) :
+                        0;
     }
 }

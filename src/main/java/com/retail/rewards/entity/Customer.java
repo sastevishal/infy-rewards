@@ -10,39 +10,35 @@ public class Customer {
 
     @Id
     @Column(length = 10)
-    private String id;
+    private String customerId;
 
     @Column(nullable = false, length = 100)
-    private String name;
-
-    // One customer can have many transactions
+    private String customerName;
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Transaction> transactions;
 
     public Customer() {
     }
 
-    public Customer(String id, String name) {
-        this.id = id;
-        this.name = name;
+    public Customer(String customerId, String customerName) {
+        this.customerId = customerId;
+        this.customerName = customerName;
     }
 
-    // Getters and Setters
-
-    public String getId() {
-        return id;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
-    public String getName() {
-        return name;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public List<Transaction> getTransactions() {
